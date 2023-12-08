@@ -1,0 +1,18 @@
+<h1> All Link Entries </h1>
+
+<table>
+    <thead>
+        <th>Short URL</th>
+        <th>External URL</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <% @link_entries.each do |e| %>
+            <tr>
+                <td><%= link_to link_entry_redirect_url(short_id: e.short_id), link_entry_redirect_url(short_id: e.short_id) %></td>
+                <td><%= link_to e.external_url, e.external_url %></td>
+                <td><%= button_to "delete", e, :method => :delete %></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

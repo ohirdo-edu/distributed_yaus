@@ -11,6 +11,10 @@
   </head>
 
   <body>
+    <nav>
+      <%= link_to_unless_current "Home", root_path %>
+      <%= link_to_unless_current "Create new", new_link_entry_path %>
+    </nav>
     <%= yield %>
   </body>
 </html>

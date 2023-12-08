@@ -1,0 +1,13 @@
+
+<% if @link_entry.errors.any? %>
+    <% @link_entry.errors.full_messages.each do |message|%>
+        <h3><%= message %></h3>
+    <%end%>
+<%end%>
+
+</br>
+
+<%= form_with model: @link_entry do |form| %>
+    <%= form.text_field :external_url %>
+    <%= form.submit %>
+<% end %>

@@ -1,0 +1,2 @@
+module LinkEntriesHelper
+end

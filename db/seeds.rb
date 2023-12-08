@@ -7,3 +7,11 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+%w[
+    https://stackoverflow.com/questions/5456020/sha1-hashing-in-rails
+    https://www.nyc.gov
+]
+.each do |external_url|
+    LinkEntry.find_or_create_by!(external_url: external_url)
+end
