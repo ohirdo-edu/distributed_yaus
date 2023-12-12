@@ -18,9 +18,9 @@ class LinkEntriesController < ApplicationController
   end
 
   def perform_redirect
-    entry = LinkEntry.find_by!(short_id: params[:short_id])
+    external_url = LinkEntry.get_external_url(params[:short_id])
 
-    redirect_to entry.external_url, allow_other_host: true
+    redirect_to external_url, allow_other_host: true
   end
 
   def destroy

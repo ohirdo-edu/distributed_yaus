@@ -1,0 +1,124 @@
+---
+version: '2'
+services:
+  nginx:
+    build: "./nginx"
+    ports:
+    - 3000:80
+    volumes:
+    - "./nginx/nginx.conf:/etc/nginx/conf.d/default.conf"
+    cpus: 0.25
+    networks:
+    - load_balancing
+    depends_on:
+    - app-1
+    - app-2
+    - app-3
+    - app-4
+    - app-5
+  app-1:
+    build: "."
+    depends_on:
+    - postgresql-master
+    - redis-node-0
+    environment:
+    - SECRET_KEY_BASE=ababababbabab8744756387465
+    cpus: 0.25
+    networks:
+    - load_balancing
+  app-2:
+    build: "."
+    depends_on:
+    - postgresql-master
+    - redis-node-0
+    environment:
+    - SECRET_KEY_BASE=ababababbabab8744756387465
+    cpus: 0.25
+    networks:
+    - load_balancing
+  app-3:
+    build: "."
+    depends_on:
+    - postgresql-master
+    - redis-node-0
+    environment:
+    - SECRET_KEY_BASE=ababababbabab8744756387465
+    cpus: 0.25
+    networks:
+    - load_balancing
+  app-4:
+    build: "."
+    depends_on:
+    - postgresql-master
+    - redis-node-0
+    environment:
+    - SECRET_KEY_BASE=ababababbabab8744756387465
+    cpus: 0.25
+    networks:
+    - load_balancing
+  app-5:
+    build: "."
+    depends_on:
+    - postgresql-master
+    - redis-node-0
+    environment:
+    - SECRET_KEY_BASE=ababababbabab8744756387465
+    cpus: 0.25
+    networks:
+    - load_balancing
+  postgresql-master:
+    image: bitnami/postgresql
+    restart: always
+    ports:
+    - 5432:5432
+    volumes:
+    - postgresql_master_data:/bitnami/postgresql
+    - "./db.sql:/docker-entrypoint-initdb.d/db.sql"
+    environment:
+    - POSTGRESQL_PGAUDIT_LOG=READ,WRITE
+    - POSTGRESQL_LOG_HOSTNAME=true
+    - POSTGRESQL_REPLICATION_MODE=master
+    - POSTGRESQL_REPLICATION_USER=repl_user
+    - POSTGRESQL_REPLICATION_PASSWORD=repl_user
+    - POSTGRESQL_USERNAME=postgres
+    - POSTGRESQL_PASSWORD=postgres
+    - POSTGRESQL_DATABASE=yaus_production
+    - ALLOW_EMPTY_PASSWORD=yes
+    cpus: 0.25
+    networks:
+    - load_balancing
+  postgresql-slave:
+    image: bitnami/postgresql
+    restart: always
+    ports:
+    - 5433:5432
+    depends_on:
+    - postgresql-master
+    environment:
+    - POSTGRESQL_PASSWORD=postgres
+    - POSTGRESQL_MASTER_HOST=postgresql-master
+    - POSTGRESQL_PGAUDIT_LOG=READ
+    - POSTGRESQL_LOG_HOSTNAME=true
+    - POSTGRESQL_REPLICATION_MODE=slave
+    - POSTGRESQL_REPLICATION_USER=repl_user
+    - POSTGRESQL_REPLICATION_PASSWORD=repl_user
+    - POSTGRESQL_MASTER_PORT_NUMBER=5432
+    - ALLOW_EMPTY_PASSWORD=yes
+    cpus: 0.25
+    networks:
+    - load_balancing
+  redis-node-0:
+    image: bitnami/redis:latest
+    depends_on: []
+    environment:
+    - REDIS_PASSWORD=bitnami
+    ports:
+    - 6379:6379
+    cpus: 0.25
+    networks:
+    - load_balancing
+networks:
+  load_balancing:
+volumes:
+  postgresql_master_data:
+    driver: local

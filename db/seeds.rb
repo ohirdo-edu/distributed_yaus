@@ -8,10 +8,23 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-%w[
-    https://stackoverflow.com/questions/5456020/sha1-hashing-in-rails
-    https://www.nyc.gov
-]
-.each do |external_url|
-    LinkEntry.find_or_create_by!(external_url: external_url)
+
+case Rails.env
+when "development"
+    %w[
+      https://stackoverflow.com/questions/5456020/sha1-hashing-in-rails
+      https://www.nyc.gov
+      ]
+      .each do |external_url|
+        LinkEntry.find_or_create_by!(external_url: external_url)
+    end
+when "production"
+  File.open(Rails.root.join('storage', 'short_ids.txt'), "w+") do |f|
+    (0...10000).each do |index|
+      link_entry = LinkEntry.find_or_create_by!(external_url: "http://example.com/link_#{index}")
+      f.puts link_entry.short_id
+    end
+  end
+else
+  puts "No op"
 end
